@@ -1,4 +1,4 @@
-# Java 141 Final Assignment
+# Artillery (command line)
 
 ---
 
