@@ -6,13 +6,11 @@
 
 ### 📖 Description
 
-The Final Project in my first Java Class. We did not use git or any versioning software, thus there were no commits during the completion of the project. The instructions were as follows:
+3rd major project from my Intro to Java 141 class. This is a command line Artillery game!
 
+Instructions:
 
-- Create a program that sorts an array of random numbers. 
-- The # of random numbers will be chosen by the user. 
-- The user will also choose a min and a max, and the random numbers that are generated will all be equal to or between these values. 
-- The user will be asked if they want to print the unsorted and sorted lists of random numbers.
+The object of Artill3ry is to destroy the opponents base before the opponent destroys your base. At the start you are given the distance the opponents base is from your own. The game will randomly choose whether you or the CPU opponent fires first. When it is your turn, you are asked to input an angle that your base will fire its cannon at, and the game will tell you where your missile landed and whether or not you scored a hit. To win, your missile must land within 5 meters (+/-) of the opponent's base. If you did not win, on your next turn you will be able to change the angle of your shot to compensate for an over shot or an under shot. Be warned, the CPU opponent uses a STATE OF THE ART never seen before artificial intelligence algorithm, so be on your toes!!!
 
 ---
 
