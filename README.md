@@ -6,7 +6,7 @@
 
 ### 📖 Description
 
-3rd major project from my Intro to Java 141 class. This is a command line Artillery game!
+3rd major project from my Intro to Java 141 class. This is a command line, non-graphical Artillery game!
 
 Instructions:
 
