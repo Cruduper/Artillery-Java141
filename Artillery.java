@@ -1,9 +1,7 @@
 import java.util.*;
 
-public class Artillery
-{
-	public static void main(String[] args)
-	{
+public class Artillery {
+	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 		boolean i = true;
 		int[] numbers = new int[7];
@@ -20,11 +18,9 @@ public class Artillery
 		win_congratulator(numbers[0], numbers[1]);	//prints win% and assessment of play based on win%
 	}
 	
-	public static boolean game_code(boolean i, int[] numbers, Scanner scan)
-	{
+	public static boolean game_code(boolean i, int[] numbers, Scanner scan) {
 		Random ran = new Random();
 		double X;	//distance between the two bases.
-		boolean win = false, lose = false;
 		int order;
 		String yesno;
 		double[] cpu_choices = new double[2], aim_change = new double[4];
@@ -64,14 +60,10 @@ public class Artillery
 		else
 			i = false;	//exits the while loop in main
 		
-		win = false;		//resets booleans for new game
-		lose = false;	
-		
 		return i;		//tells while loop in main whether or not to play again 
 	}
 	
-	public static int rand_dist(Random ran) 
-	{
+	public static int rand_dist(Random ran) {
 		double dist;
 		dist = 350 + ran.nextDouble() * 350; //creates a random distance between bases that is between 350 and 700
 		dist = Math.floor(dist);	//makes the distance an even integer for viewability
@@ -79,8 +71,7 @@ public class Artillery
 		return (int) dist;
 	}
 	
-	public static int player_order(Random ran)
-	{
+	public static int player_order(Random ran) {
 		double cpu_hum;
 		int order_no;
 		
@@ -94,8 +85,7 @@ public class Artillery
 		return order_no;	
 	}
 			
-	public static void cpu_first(Random ran, double X, Scanner scan, int[] numbers, double[] cpu_choices, double[] aim_change)
-	{
+	public static void cpu_first(Random ran, double X, Scanner scan, int[] numbers, double[] cpu_choices, double[] aim_change) {
 		double cpu_hits, player_hits;
 		boolean win, lose;
 		
@@ -134,8 +124,7 @@ public class Artillery
 		}// end while
 	}// end cpu_first
 		
-	public static void human_first(Random ran, double X, Scanner scan, int[] numbers, double[] cpu_choices, double[] aim_change)
-	{
+	public static void human_first(Random ran, double X, Scanner scan, int[] numbers, double[] cpu_choices, double[] aim_change) {
 		double cpu_hits, player_hits;
 		boolean win, lose;
 		
@@ -172,19 +161,17 @@ public class Artillery
 		}// end while
 	}// end human_first
 		
-	public static double cpu_turn(Random ran, double X, int[] numbers, double[] cpu_choices, double[] aim_change)
-	{
+	public static double cpu_turn(Random ran, double X, int[] numbers, double[] cpu_choices, double[] aim_change) {
 		double cpu_missile_hit;
 		
-		if ( numbers[2] == 1 )	//in the first round of the game, these min, and max modifier boundaries are given for the cpu	
-		{
-			aim_change[0] = 25;  //changes the cpu's minimum allowable choice for degrees
-			aim_change[1] = 20;  //changes the modifier for cpu's maximum allowable choice for degrees. max = (min + aim_change[1])
-			aim_change[2] = 55;  //changes the cpu's minimum allowable choice for speed
-			aim_change[3] = 35;  //changes the modifier for cpu's maximum allowable choice for speed. max = (min + aim_change[3])
+		if ( numbers[2] == 1 ) { //first round of the game, min/max boundaries given to cpu
+			aim_change[0] = 25;  //changes minimum allowable choice for degrees
+			aim_change[1] = 20;  //changes maximum allowable choice for degrees. max = (min + aim_change[1])
+			aim_change[2] = 55;  //changes minimum allowable choice for speed
+			aim_change[3] = 35;  //changes maximum allowable choice for speed. max = (min + aim_change[3])
 		
-			cpu_choices[0] = 0;	//final # of degrees the cpu chooses
-			cpu_choices[1] = 0;	//final # of speed (in m/s) the cpu chooses
+			cpu_choices[0] = 0;	//final cpu degrees choice
+			cpu_choices[1] = 0;	//final cpu speed (in m/s) choice
 		}
 			
 		cpu_choices[0] = aim_change[0] + rand_generator(ran) * aim_change[1]; //degrees = min + ( random double between 0-1 ) * max modifier
@@ -202,8 +189,7 @@ public class Artillery
     below is the "STATE OF THE ART" AI algorithm. For the first round, values of the mins and the max modifiers are given. After that, this code changes those values based on whether or not the cpu undershoots or overshoots the player base. It continues to change based on over or undershooting during subsequent rounds of play. 
     */
 			
-		if ( cpu_missile_hit - X > 0 )	//if executes when the cpu overshoots the player base
-		{
+		if ( cpu_missile_hit - X > 0 )	{ //cpu overshoots the player base
 			aim_change[1] = cpu_choices[0] - aim_change[0]; //augments max angle modifier so that max angle on next turn = last angle choice
 			aim_change[3] = cpu_choices[1] - aim_change[2]; //augments max speed modifier so that max speed on next turn = last speed choice
 			
