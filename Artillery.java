@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class project3artillery
+public class Artillery
 {
 	public static void main(String[] args)
 	{
