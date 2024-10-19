@@ -18,6 +18,10 @@ public class GameStats {
     this.gamesWon = gamesWon;
   }
 
+  public void incrementGamesWon() {
+    this.gamesWon++;
+  }
+
   public int getGamesPlayed() {
     return gamesPlayed;
   }
@@ -26,11 +30,19 @@ public class GameStats {
     this.gamesPlayed = gamesPlayed;
   }
 
+  public void incrementGamesPlayed() {
+    this.gamesPlayed++;
+  }
+
   public int getRoundsPlayed() {
     return roundsPlayed;
   }
 
   public void setRoundsPlayed(int roundsPlayed) {
     this.roundsPlayed = roundsPlayed;
+  }
+
+  public void incrementRoundsPlayed() {
+    this.roundsPlayed++;
   }
 }
