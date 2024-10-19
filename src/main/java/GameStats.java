@@ -2,12 +2,12 @@ package src.main.java;
 public class GameStats {
   private int gamesWon;
   private int gamesPlayed;
-  private int roundsPlayed;
+  private int roundNum;
 
-  public GameStats(int _gamesWon, int _gamesPlayed, int _roundsPlayed) {
+  public GameStats(int _gamesWon, int _gamesPlayed, int _roundNum) {
     this.gamesWon = _gamesWon;
     this.gamesPlayed = _gamesPlayed;
-    this.roundsPlayed = _roundsPlayed;
+    this.roundNum = _roundNum;
   }
 
   public int getGamesWon() {
@@ -26,23 +26,23 @@ public class GameStats {
     return gamesPlayed;
   }
 
-  public void setGamesPlayed(int gamesPlayed) {
-    this.gamesPlayed = gamesPlayed;
+  public void setGamesPlayed(int _gamesPlayed) {
+    this.gamesPlayed = _gamesPlayed;
   }
 
   public void incrementGamesPlayed() {
     this.gamesPlayed++;
   }
 
-  public int getRoundsPlayed() {
-    return roundsPlayed;
+  public int getRoundNum() {
+    return roundNum;
   }
 
-  public void setRoundsPlayed(int roundsPlayed) {
-    this.roundsPlayed = roundsPlayed;
+  public void setRoundNum(int _roundNum) {
+    this.roundNum = _roundNum;
   }
 
-  public void incrementRoundsPlayed() {
-    this.roundsPlayed++;
+  public void incrementRoundNum() {
+    this.roundNum++;
   }
 }
