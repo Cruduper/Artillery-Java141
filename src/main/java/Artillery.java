@@ -10,15 +10,15 @@ public class Artillery {
 		boolean i = true;
     GameStats gameStats = new GameStats(0,0,1);
 		
-		game_rules(scan);	//shows game rules only on program start
+		gameRules(scan);	//shows game rules only on program start
 		
 		while ( i == true )
-			i = game_code(i, gameStats, scan);	
+			i = gameCode(i, gameStats, scan);	
 
-		win_congratulator(gameStats);	//prints win% and assessment of play based on win%
+		winCongratulator(gameStats);	//prints win% and assessment of play based on win%
 	}
 	
-	public static boolean game_code(boolean i, GameStats gameStats, Scanner scan) {
+	public static boolean gameCode(boolean i, GameStats gameStats, Scanner scan) {
 		Random randObj = new Random();
 		double X;	//distance between the two bases.
 		int order;
@@ -40,17 +40,17 @@ public class Artillery {
 		System.out.println("****************************          GAME #" + gameStats.getGamesPlayed() + "          ****************************\n");
 		
 		
-		X = rand_dist(randObj);	// calculates a random distance between 350 and 700
+		X = randomDistance(randObj);	// calculates a random distance between 350 and 700
 		System.out.println("The distance between you and your opponents base is: " + X + " meters away.");
 		
 		order = 2;	//initializes order so the compiler won't freak out
 		gameStats.setRoundsPlayed(1); //sets the current round to #1, so that the player_order function will work
-		order = player_order(randObj);	
+		order = determinePlayerOrder(randObj);	
 		
 		if ( order == 1 )		
-			cpu_first(randObj, X, scan, gameStats, cpu_choices, aim_change);	
+			cpuFirstGame(randObj, X, scan, gameStats, cpu_choices, aim_change);	
 		else
-			human_first(randObj, X, scan, gameStats, cpu_choices, aim_change);	
+			humanFirstGame(randObj, X, scan, gameStats, cpu_choices, aim_change);	
 		
 		System.out.print("\nWould you like to play again? (y/n): ");
 		yesno = scan.next();
@@ -64,7 +64,7 @@ public class Artillery {
 		return i;		//tells while loop in main whether or not to play again 
 	}
 	
-	public static int rand_dist(Random ran) {
+	public static int randomDistance(Random ran) {
 		double dist;
 		dist = 350 + ran.nextDouble() * 350; //creates a random distance between bases that is between 350 and 700
 		dist = Math.floor(dist);	//makes the distance an even integer for viewability
@@ -72,11 +72,11 @@ public class Artillery {
 		return (int) dist;
 	}
 	
-	public static int player_order(Random ran) {
+	public static int determinePlayerOrder(Random ran) {
 		double cpu_hum;
 		int order_no;
 		
-		cpu_hum = rand_generator(ran);	//generates a random double between 0 and 1
+		cpu_hum = randomDouble(ran);	//generates a random double between 0 and 1
 		
 		if ( cpu_hum > .5 )
 			order_no = 0;	//cpu will go first
@@ -86,7 +86,7 @@ public class Artillery {
 		return order_no;	
 	}
 			
-	public static void cpu_first(Random ran, double X, Scanner scan, GameStats gameStats, double[] cpu_choices, double[] aim_change) {
+	public static void cpuFirstGame(Random ran, double X, Scanner scan, GameStats gameStats, double[] cpu_choices, double[] aim_change) {
 		double cpu_hits, player_hits;
 		boolean win, lose;
 		
@@ -96,7 +96,7 @@ public class Artillery {
 		lose = false;
 		while( win == false && lose == false ) { //runs until win or loss criteria is met
 		
-			cpu_hits = cpu_turn(ran, X, gameStats, cpu_choices, aim_change);	//cpu_hits = how far the cpu's missile lands from player's base
+			cpu_hits = cpuTurn(ran, X, gameStats, cpu_choices, aim_change);	//cpu_hits = how far the cpu's missile lands from player's base
 			if ( Math.abs(cpu_hits - X) <= 5 )	//if cpu's missile lands within 5m of the player's base, cpu wins
 			{					
 				System.out.println("               The cpu hit your base! YOU LOSE!!!!!!!!!!!");
@@ -109,7 +109,7 @@ public class Artillery {
 			
 			if ( lose == false )	// if the cpu doesn't hit, player gets a turn
 			{	
-				player_hits = player_turn(scan, X);	// player_hits = how far away the player's missile lands
+				player_hits = playerTurn(scan, X);	// player_hits = how far away the player's missile lands
 				
 				if ( Math.abs(player_hits - X) <= 5 )	//if player's missile lands within 5m of the cpu's base, player wins
 				{
@@ -125,7 +125,7 @@ public class Artillery {
 		}// end while
 	}// end cpu_first
 		
-	public static void human_first(Random ran, double X, Scanner scan, GameStats gameStats, double[] cpu_choices, double[] aim_change) {
+	public static void humanFirstGame(Random ran, double X, Scanner scan, GameStats gameStats, double[] cpu_choices, double[] aim_change) {
 		double cpu_hits, player_hits;
 		boolean win, lose;
 		
@@ -134,7 +134,7 @@ public class Artillery {
 		win = false;	//initializes values for these booleans for the compiler
 		lose = false;
 		while( win == false && lose == false ) { //runs until win or loss criteria is met
-			player_hits = player_turn(scan, X);	//player_hits give a vlue for how far away the player's missile lands
+			player_hits = playerTurn(scan, X);	//player_hits give a vlue for how far away the player's missile lands
 			
 			if ( Math.abs(player_hits - X) <= 5 ) {	//player wins if their missile lands within 5m of cpu base
 				System.out.println("            You've hit the cpu base! YOU WIN!!!!!!!!!!!!!!!!!!");
@@ -145,7 +145,7 @@ public class Artillery {
 			}
 			
 			if ( win == false )	{
-				cpu_hits = cpu_turn(ran, X, gameStats, cpu_choices, aim_change);	//cpu_hits = distance the cpu's missile lands from player's base
+				cpu_hits = cpuTurn(ran, X, gameStats, cpu_choices, aim_change);	//cpu_hits = distance the cpu's missile lands from player's base
 				if ( Math.abs(cpu_hits - X) <= 5 ) { // cpu wins if its missile lands within 5m of player's base
 					System.out.println("               The cpu hit your base! YOU LOSE!!!!!!!!!!!");
 					lose = true;	// stops while loop
@@ -156,10 +156,10 @@ public class Artillery {
 		}// end while
 	}// end human_first
 		
-	public static double cpu_turn(Random ran, double X, GameStats gameStats, double[] cpu_choices, double[] aim_change) {
+	public static double cpuTurn(Random ran, double X, GameStats gameStats, double[] cpu_choices, double[] aim_change) {
 		double cpu_missile_hit;
 		
-		if ( gameStats.getRoundsPlayed() == 1 ) { //first round of the game, min/max boundaries given to cpu
+		if ( gameStats.getRoundsPlayed() == 1 ) { //min/max boundaries given to cpu only on 1st round of play
 			aim_change[0] = 25;  //changes minimum allowable choice for degrees
 			aim_change[1] = 20;  //changes maximum allowable choice for degrees. max = (min + aim_change[1])
 			aim_change[2] = 55;  //changes minimum allowable choice for speed
@@ -169,12 +169,12 @@ public class Artillery {
 			cpu_choices[1] = 0;	//final cpu speed (in m/s) choice
 		}
 			
-		cpu_choices[0] = aim_change[0] + rand_generator(ran) * aim_change[1]; //degrees = min + ( random double between 0-1 ) * max modifier
+		cpu_choices[0] = aim_change[0] + randomDouble(ran) * aim_change[1]; //degrees = min + ( random double between 0-1 ) * max modifier
 		System.out.print("The cpu chooses " + (int)Math.floor( cpu_choices[0] ) + " degrees.\n");
-		cpu_choices[1] = aim_change[2] + rand_generator(ran) * aim_change[3]; //speed = min + ( random double between 0-1 ) * max modifier
+		cpu_choices[1] = aim_change[2] + randomDouble(ran) * aim_change[3]; //speed = min + ( random double between 0-1 ) * max modifier
 		System.out.println("The cpu chooses a speed of " + (int)Math.floor( cpu_choices[1] ) + " meters per second.");
 	
-		cpu_missile_hit = hit_calc(cpu_choices[0], cpu_choices[1]); //calculates the distance the missile travels
+		cpu_missile_hit = missileTravelDistance(cpu_choices[0], cpu_choices[1]); //calculates the distance the missile travels
 		cpu_missile_hit = Math.floor(cpu_missile_hit); //rounds result for easier viewability
 		
 		System.out.println("The cpu's shot hit " + (cpu_missile_hit - X) + " meters from your base.");
@@ -197,11 +197,11 @@ public class Artillery {
 			aim_change[3] = aim_change[3] - cpu_choices[1] + aim_change[2]; //this augments the max speed modifier to account for the min change
 		}
 			
-		gameStats.incrementRoundsPlayed();	//makes the number of rounds go up, so that the givens for min, and max modifiers won't execute after first round of play
+		gameStats.incrementRoundsPlayed();	
 		return cpu_missile_hit;
 	}// end cpu_turn
 	
-	public static double player_turn(Scanner scan, double X) {
+	public static double playerTurn(Scanner scan, double X) {
 		double plyr_deg_choice, plyr_speed_choice, plyr_missile_hit;
 		
 		System.out.print("Enter an angle: ");
@@ -209,15 +209,15 @@ public class Artillery {
 		System.out.print("Enter a speed: ");
 		plyr_speed_choice = scan.nextDouble();
 		
-		plyr_missile_hit = hit_calc(plyr_deg_choice, plyr_speed_choice);	// calculates the distance the missile travels
-		plyr_missile_hit = Math.floor(plyr_missile_hit);	// rounds result for easier viewability
+		plyr_missile_hit = missileTravelDistance(plyr_deg_choice, plyr_speed_choice);	//calculates distance the missile travels
+		plyr_missile_hit = Math.floor(plyr_missile_hit);	//rounds result for easier viewability
 		
 		System.out.println("Your missile landed " + (plyr_missile_hit - X) + " meters from the cpu base.");
 		
 		return plyr_missile_hit;
 	}
 	
-	public static double hit_calc(double degrees, double speed) {
+	public static double missileTravelDistance(double degrees, double speed) {
 		double missile_dist; 
     double radians;
 		radians = Math.toRadians(degrees);
@@ -225,7 +225,7 @@ public class Artillery {
 		return missile_dist;
 	}
 	
-	public static void game_rules(Scanner scan) {
+	public static void gameRules(Scanner scan) {
 		String confirm;
 		
 		System.out.print("*******************************************************************************\n\n");
@@ -252,13 +252,13 @@ public class Artillery {
 		}
 	}//end game_rules
 	
-	public static double rand_generator(Random ran) {
+	public static double randomDouble(Random rando) { //generates random double between 0-1
 		double decider;
-		decider = ran.nextDouble();	//generates random double between 0-1
+		decider = rando.nextDouble();	
 		return decider;
 	}
 	
-	public static void win_congratulator(
+	public static void winCongratulator(
   GameStats gameStats) {
 		double winPercentage;
 		winPercentage = gameStats.getGamesWon() / gameStats.getGamesPlayed();	
