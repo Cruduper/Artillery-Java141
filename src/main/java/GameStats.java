@@ -1,12 +1,13 @@
+package src.main.java;
 public class GameStats {
   private int gamesWon;
   private int gamesPlayed;
   private int roundsPlayed;
 
-  public GameStats() {
-    this.gamesWon = 0;
-    this.gamesPlayed = 0;
-    this.roundsPlayed = 1;
+  public GameStats(int _gamesWon, int _gamesPlayed, int _roundsPlayed) {
+    this.gamesWon = _gamesWon;
+    this.gamesPlayed = _gamesPlayed;
+    this.roundsPlayed = _roundsPlayed;
   }
 
   public int getGamesWon() {
