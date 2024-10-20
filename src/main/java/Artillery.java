@@ -190,15 +190,13 @@ public class Artillery {
 		playerMissileDist = missileTravelDistance(plyrDegChoice, plyrSpeedChoice);	//calculates distance the missile travels
 		playerMissileDist = Math.floor(playerMissileDist);	//rounds result for easier viewability
 		
-		System.out.println("Your missile landed " + (playerMissileDist - baseDistanceGap) + " meters from the cpu base.");
-		
-		
-
     if (Math.abs(playerMissileDist - baseDistanceGap) <= 5) { // win condition -- missile within 5m of cpu base                                                        
       System.out.println(AnsiColors.green() + "            You've hit the cpu base! YOU WIN!!!!!!!!!!!!!!!!!!" + AnsiColors.reset());
       returnBool = true;
     } else {
-      System.out.println("You missed the cpu base!\n");
+      System.out.println(AnsiColors.red()
+          + "Your missile landed " + (playerMissileDist - baseDistanceGap) + " meters from the cpu base.\n"
+          + AnsiColors.reset());
       returnBool =  false;
     }
 
