@@ -126,7 +126,7 @@ public class Artillery {
 		double cpuMissileDist;
     boolean returnBool;
 		
-		if ( isFirstRound ) { //min/max boundaries given to cpu only on 1st round of play
+		if ( isFirstRound ) { //min+max boundaries given to cpu only on 1st round of play
 			aim_change[0] = 25;  //changes minimum allowable choice for degrees
 			aim_change[1] = 20;  //changes maximum allowable choice for degrees. max = (min + aim_change[1])
 			aim_change[2] = 55;  //changes minimum allowable choice for speed
@@ -204,11 +204,9 @@ public class Artillery {
 	}
 	
 	public static double missileTravelDistance(double degrees, double speed) {
-		double missile_dist; 
     double radians;
 		radians = Math.toRadians(degrees);
-		missile_dist = ( speed * speed * Math.sin(2 * radians) ) / 9.8;	
-		return missile_dist;
+		return ( speed * speed * Math.sin(2 * radians) ) / 9.8;	
 	}
 
   public static int randomDistance(Random randObj) {
