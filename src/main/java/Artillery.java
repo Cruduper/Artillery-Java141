@@ -1,6 +1,7 @@
 package src.main.java;
 import java.util.*;
 import src.main.java.GameStats;
+import src.main.java.AnsiColors;
 
 
 
@@ -12,8 +13,9 @@ public class Artillery {
 		Scanner scan = new Scanner(System.in);
 		boolean i = true;
     GameStats gameStats = new GameStats(0,0,1);
-		
+
 		gameRules(scan);	//shows game rules only on program start
+    textColorizer(scan); //asks to turn colored text off/on 
 		
 		while ( i == true )
 			i = gameCode(gameStats, scan);	
@@ -43,7 +45,7 @@ public class Artillery {
 		
 		gameStats.incrementGamesPlayed();	
 		System.out.println("\n");
-		System.out.println("****************************          GAME #" + gameStats.getGamesPlayed() + "          ****************************\n");
+		System.out.println(AnsiColors.blue() + "****************************          GAME #" + gameStats.getGamesPlayed() + "          ****************************\n" + AnsiColors.reset());
 		
 		
 		baseDistanceGap = randomDistance(randObj);	// calculates a random distance between 350 and 700
@@ -92,10 +94,10 @@ public class Artillery {
       }
 
       gameStats.incrementRoundNum();
-      System.out.print("\n*******      ROUND #" + gameStats.getRoundNum() + "      *******\n");
+      System.out.print("\n*******      " + AnsiColors.yellow() + "ROUND #" + gameStats.getRoundNum() + AnsiColors.reset()
+          + "      *******\n");
 
       if (isCpuFirst) {
-
         isCpuWinner = cpuTurn(isFirstRound, randObj, baseDistanceGap, cpu_choices, aim_change);	
         
         if ( isCpuWinner == false )	// if the cpu doesn't hit, player gets a turn
@@ -164,7 +166,7 @@ public class Artillery {
 		
     if ( Math.abs(cpuMissileDist - baseDistanceGap) <= 5 )	//win condition -- missile within 5m of player base
     {					
-      System.out.println("               The cpu hit your base! YOU LOSE!!!!!!!!!!!");
+      System.out.println(AnsiColors.red() + "               The cpu hit your base! YOU LOSE!!!!!!!!!!!" + AnsiColors.reset());
       returnBool = true;
     }
     else
@@ -193,7 +195,7 @@ public class Artillery {
 		
 
     if (Math.abs(playerMissileDist - baseDistanceGap) <= 5) { // win condition -- missile within 5m of cpu base                                                        
-      System.out.println("            You've hit the cpu base! YOU WIN!!!!!!!!!!!!!!!!!!");
+      System.out.println(AnsiColors.green() + "            You've hit the cpu base! YOU WIN!!!!!!!!!!!!!!!!!!" + AnsiColors.reset());
       returnBool = true;
     } else {
       System.out.println("You missed the cpu base!\n");
@@ -246,25 +248,43 @@ public class Artillery {
 		System.out.println("Welcome to Artill3ry, by CrudTech gaming division.\n");
 		System.out.print("Would you like to see the rules of the game? (y/n): ");	
 		confirm = scan.next();	
-		System.out.print("\n\n");
+		System.out.print("\n");
 			
 		if ( confirm.equalsIgnoreCase("yes") || confirm.equalsIgnoreCase("y") )
 		{
-			System.out.print("****************          Game Rulez          ***************************\n");
-			System.out.print("The object of Artill3ry is to destroy the opponents base before the opponent    ");
-			System.out.print("destroys your base. At the start you are given the distance the opponents base  ");
-			System.out.print("is from your own. The game will randomly choose whether you or the CPU opponent ");
-			System.out.print("fires first. When it is your turn, you are asked to input an angle that your    ");
-			System.out.print("base will fire its cannon at, and the game will tell you where your missile     ");
-			System.out.print("landed and whether or not you scored a hit. To win, your missile must land      ");
-			System.out.print("within 5 meters (+/-) of the opponent's base. If you did not win, on your next  ");
-			System.out.print("turn you will be able to change the angle of your shot to compensate for an over");
-			System.out.print("shot or an under shot. Be warned, the CPU opponent uses a STATE OF THE ART never");
-			System.out.print("seen before artificial intelligence algorithm, so be on your toes!!!\n\n");
-			System.out.print("HIT ANY KEY, THEN ENTER TO CONTINUE...");
+			System.out.print(AnsiColors.yellow() + 
+                           "***************************       Game Rules       ****************************\n" + AnsiColors.reset());
+			System.out.println("The object of Artill3ry is to destroy the opponents base before the opponent ");
+			System.out.println("destroys your base. At the start you are given the distance the opponents base ");
+			System.out.println("is from your own. The game will randomly choose whether you or the CPU opponent ");
+			System.out.println("fires first. When it is your turn, you are asked to input an angle that your ");
+			System.out.println("base will fire its cannon at, and the game will tell you where your missile ");
+			System.out.println("landed and whether or not you scored a hit. To win, your missile must land ");
+			System.out.println("within 5 meters (+/-) of the opponent's base. If you did not win, on your next ");
+			System.out.println("turn you will be able to change the angle of your shot to compensate for an over ");
+			System.out.println("shot or an under shot. Be warned, the CPU opponent uses a STATE OF THE ART never ");
+			System.out.println("seen before artificial intelligence algorithm, so be on your toes!!!\n\n");
+			System.out.println("HIT ANY KEY, THEN ENTER TO CONTINUE...");
 			confirm = scan.next();
 		}
 	}//end game_rules
+
+  public static void textColorizer(Scanner scan){
+    // Clear the input buffer
+    if (scan.hasNextLine()) {
+      scan.nextLine();
+    }
+
+    // Prompt the user to enable or disable colors
+    System.out.print("Would you like to enable colored text(causes text errors on some systems)? (y/n): ");
+    String colorChoice = scan.nextLine();
+    if (colorChoice.equalsIgnoreCase("n") || colorChoice.equalsIgnoreCase("no")) {
+      AnsiColors.setEnableColors(false);
+      System.out.println("\nCOLORS DISABLED");
+    } else {
+      System.out.println(AnsiColors.red() + "\nC" + AnsiColors.yellow() + "O" + AnsiColors.green() + "L" + AnsiColors.blue() + "O" + AnsiColors.red() + "R" + AnsiColors.yellow() + "S" + AnsiColors.reset() + " ENABLED");
+    }
+  }
 	
 	public static void winCongratulator(
   GameStats gameStats) {
@@ -273,16 +293,16 @@ public class Artillery {
 		
 		System.out.println("\nYour win percentage is: " + winPercentage * 100 + "%.");
 		
-		if ( winPercentage <= .75 ) {
-			System.out.print("Your failure vs. the shoddy AI of a novice coder should be commended!!...or not.\n\n");
+		if ( winPercentage <= .5 ) {
+			System.out.print(AnsiColors.red() + "Your failure vs. the shoddy AI of a novice coder should be commended!!...or not.\n\n" + AnsiColors.reset());
     }
 
-		if ( winPercentage < .9 && winPercentage > .75 ) {
-			System.out.print("Not bad...not great. Were you a middle child?\n");
+		if ( winPercentage < .9 && winPercentage > .5 ) {
+			System.out.print(AnsiColors.yellow() + "Not bad...not great. Were you a middle child?\n" + AnsiColors.reset());
     }
 
 		if ( winPercentage >= .9 )	{
-			System.out.print("Amazing! The battle between man and machine has been decided...erm...decisively.\n\n");
+			System.out.print(AnsiColors.green() + "Amazing! The battle between man and machine has been decided...erm...decisively.\n\n" + AnsiColors.reset());
     }
 	}
 }//end class
