@@ -122,7 +122,7 @@ public class Artillery {
 	}// end cpu_first
 		
 		
-	public static boolean cpuTurn(boolean isFirstRound, Random ran, double baseDistanceGap, double[] cpu_choices, double[] aim_change) {
+	public static boolean cpuTurn(boolean isFirstRound, Random randObj, double baseDistanceGap, double[] cpu_choices, double[] aim_change) {
 		double cpuMissileDist;
     boolean returnBool;
 		
@@ -136,9 +136,9 @@ public class Artillery {
 			cpu_choices[1] = 0;	//final cpu speed (in m/s) choice
 		}
 			
-		cpu_choices[0] = aim_change[0] + randomDouble(ran) * aim_change[1]; //degrees = min + ( random double between 0-1 ) * max modifier
+		cpu_choices[0] = aim_change[0] + randObj.nextDouble() * aim_change[1]; //degrees = min + ( random double between 0-1 ) * max modifier
 		System.out.print("The CPU chooses " + (int)Math.floor( cpu_choices[0] ) + " degrees.\n");
-		cpu_choices[1] = aim_change[2] + randomDouble(ran) * aim_change[3]; //speed = min + ( random double between 0-1 ) * max modifier
+		cpu_choices[1] = aim_change[2] + randObj.nextDouble() * aim_change[3]; //speed = min + ( random double between 0-1 ) * max modifier
 		System.out.println("The CPU chooses a speed of " + (int)Math.floor( cpu_choices[1] ) + " meters per second.");
 	
 		cpuMissileDist = missileTravelDistance(cpu_choices[0], cpu_choices[1]); //calculates the distance the missile travels
@@ -225,7 +225,7 @@ public class Artillery {
 		double cpu_hum;
 		boolean isCpuFirst;
 		
-		cpu_hum = randomDouble(randObj);	//generates a random double between 0 and 1
+		cpu_hum = randObj.nextDouble();	//generates a random double between 0 and 1
 		
 		if ( cpu_hum > .5 )
 			isCpuFirst = true;	//cpu will go first
@@ -233,12 +233,6 @@ public class Artillery {
 			isCpuFirst = false;	//human will go first
 	
 		return isCpuFirst;	
-	}
-
-  public static double randomDouble(Random rando) { //generates random double between 0-1
-		double decider;
-		decider = rando.nextDouble();	
-		return decider;
 	}
 	
 	public static void gameRules(Scanner scan) {
