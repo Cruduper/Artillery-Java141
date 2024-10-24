@@ -11,7 +11,7 @@ public class CpuGameData {
       private double maxSpeedOffset;
 
 
-      public CpuGameData(double _minDegBound, double _maxDegOffset, double _minSpdBound, double _maxSpdOffset, double _degrees, double _speed){
+      public CpuGameData(double _minDegBound, double _maxDegOffset, double _minSpdBound, double _maxSpdOffset, double _degrees, double _speed) {
         this.minDegreeBound = _minDegBound;
         this.maxDegreeOffset = _maxDegOffset;
         this.minSpeedBound = _minSpdBound;
@@ -71,5 +71,4 @@ public class CpuGameData {
       public double getMaxSpeedOffset() {
         return this.maxSpeedOffset;
       }
-
 }
