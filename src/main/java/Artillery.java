@@ -132,12 +132,17 @@ public class Artillery {
 		}
 		
 		if ( cpuMissileDist - baseDistanceGap < 0 ) {	//cpu undershoots the player base
+      double oldMinDegreeBound = cpuData.getMinDegreeBound();
+      double oldMinSpeedBound = cpuData.getMinSpeedBound();
+      double degreeDelta = 0;
+      double speedDelta = 0;
 			cpuData.setMinDegreeBound(cpuData.getDegrees()); // minDegreeBound for next round = this round's degree choice 
 			cpuData.setMinSpeedBound(cpuData.getSpeed()); // minSpeedBound for next round = this round's speed choice
+      degreeDelta = cpuData.getMinDegreeBound() - oldMinDegreeBound;
+      speedDelta = cpuData.getMinSpeedBound() - oldMinSpeedBound;
 
-      //TODO this logic doesn't seem to do anything, fix
-			cpuData.setMaxDegreeOffset(cpuData.getMaxDegreeOffset() - cpuData.getDegrees() + cpuData.getMinDegreeBound()); //this augments maxDegreeOffset to account for the min change
-			cpuData.setMaxSpeedOffset(cpuData.getMaxSpeedOffset() - cpuData.getSpeed() + cpuData.getMinSpeedBound()); //this augments the max speed modifier to account for the min change
+			cpuData.setMaxDegreeOffset(cpuData.getMaxDegreeOffset() - degreeDelta); //keeps max bound the same after the min bound is offset
+			cpuData.setMaxSpeedOffset(cpuData.getMaxSpeedOffset() - speedDelta); //keeps max bound the same after the min bound is offset
 		}
 		
     if ( Math.abs(cpuMissileDist - baseDistanceGap) <= 5 )	//win condition -- missile within 5m of player base
