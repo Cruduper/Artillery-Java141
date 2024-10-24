@@ -1,6 +1,7 @@
 package src.main.java;
 import java.util.*;
 import src.main.java.GameStats;
+import src.main.java.CpuGameData;
 import src.main.java.AnsiColors;
 
 
@@ -31,17 +32,7 @@ public class Artillery {
     boolean exit = false;
     String firstPlayerStr = "";
 		double baseDistanceGap;
-		double[] cpu_choices = new double[2];
-    double[] aim_change = new double[4];
     String confirm;
-		
-		cpu_choices[0] = 0;	
-		cpu_choices[1] = 0;	
-		
-		aim_change[0] = 0;  //changes the cpu's minimum allowable choice for degrees
-		aim_change[1] = 0;  //changes the modifier for cpu's maximum allowable choice for degrees. max = (min + aim_change[1])
-		aim_change[2] = 0;  //changes the cpu's minimum allowable choice for speed
-		aim_change[3] = 0;  //changes the modifier for cpu's maximum allowable choice for speed. max = (min + aim_change[3])
 		
 		gameStats.incrementGamesPlayed();	
 		System.out.println("\n");
@@ -60,7 +51,7 @@ public class Artillery {
 		
 		gameStats.setRoundNum(1); //sets the current round to #1, so that the player_order function will work
 			
-		singleGame(isCpuFirst, randObj, baseDistanceGap, scan, gameStats, cpu_choices, aim_change);	
+		singleGame(isCpuFirst, randObj, baseDistanceGap, scan, gameStats);	
 
 		
 		System.out.print("\nWould you like to play again? (y/n): ");
@@ -77,28 +68,22 @@ public class Artillery {
 		return exit;		//tells while loop in main whether or not to play again 
 	}
 			
-	public static void singleGame(boolean isCpuFirst, Random randObj, double baseDistanceGap, Scanner scan, GameStats gameStats, double[] cpu_choices, double[] aim_change) {
-    boolean isFirstRound;
+	public static void singleGame(boolean isCpuFirst, Random randObj, double baseDistanceGap, Scanner scan, GameStats gameStats) {
 		boolean isPlayerWinner; 
     boolean isCpuWinner;
+    CpuGameData cpuData = new CpuGameData();
 		
 		isPlayerWinner = false;	
 		isCpuWinner = false;
 
 		while( isPlayerWinner == false && isCpuWinner == false ) { //runs until win or loss criteria is met
 
-      if (gameStats.getRoundNum() == 1) {
-        isFirstRound = true;
-      } else {
-        isFirstRound = false;
-      }
-
       gameStats.incrementRoundNum();
       System.out.print("\n*******      " + AnsiColors.yellow() + "ROUND #" + gameStats.getRoundNum() + AnsiColors.reset()
           + "      *******\n");
 
       if (isCpuFirst) {
-        isCpuWinner = cpuTurn(isFirstRound, randObj, baseDistanceGap, cpu_choices, aim_change);	
+        isCpuWinner = cpuTurn(randObj, baseDistanceGap, cpuData);	
         
         if ( isCpuWinner == false )	// if the cpu doesn't hit, player gets a turn
         {	
@@ -112,57 +97,47 @@ public class Artillery {
 
         if (isPlayerWinner == false) // if the cpu doesn't hit, player gets a turn
         {
-          isCpuWinner = cpuTurn(isFirstRound, randObj, baseDistanceGap, cpu_choices, aim_change);
+          isCpuWinner = cpuTurn(randObj, baseDistanceGap, cpuData);
         } else {
           gameStats.incrementGamesWon();
         }
-
       }
 		}// end while
 	}// end cpu_first
 		
 		
-	public static boolean cpuTurn(boolean isFirstRound, Random randObj, double baseDistanceGap, double[] cpu_choices, double[] aim_change) {
+	public static boolean cpuTurn(Random randObj, double baseDistanceGap, CpuGameData cpuData) {
 		double cpuMissileDist;
     boolean returnBool;
 		
-		if ( isFirstRound ) { //min+max boundaries given to cpu only on 1st round of play
-          //example: minBound = 25, max offset = 20, so maxBound would be 45
-			aim_change[0] = 25;  //changes minimum allowable choice for degrees
-			aim_change[1] = 20;  //changes maximum allowable offset above the min allowable degrees choice. 
-			aim_change[2] = 55;  //changes minimum allowable choice for speed
-			aim_change[3] = 35;  //changes maximum allowable offset above the min speed choice. 
-		
-			cpu_choices[0] = 0;	//final cpu degrees choice
-			cpu_choices[1] = 0;	//final cpu speed (in m/s) choice
-		}
-    double dubb = randObj.nextDouble(); 
-		cpu_choices[0] = aim_change[0] + dubb * aim_change[1]; //degrees = min + ( random double between 0-1 ) * max modifier
-		System.out.print("The CPU chooses " + (int)Math.floor( cpu_choices[0] ) + " degrees.\n");
-		cpu_choices[1] = aim_change[2] + randObj.nextDouble() * aim_change[3]; //speed = min + ( random double between 0-1 ) * max modifier
-		System.out.println("The CPU chooses a speed of " + (int)Math.floor( cpu_choices[1] ) + " meters per second.");
+        // example: minBound = 25, maxOffset = 20, then maxBound would be 45, so CPU will pick a value somewhere between 25 and 45
+		cpuData.setDegrees(cpuData.getMinDegreeBound() + randObj.nextDouble() * cpuData.getMaxDegreeOffset()); 
+		System.out.print("The CPU chooses " + (int)Math.floor( cpuData.getDegrees() ) + " degrees.\n");
+		cpuData.setSpeed(cpuData.getMinSpeedBound() + randObj.nextDouble() * cpuData.getMaxSpeedOffset()); 
+		System.out.println("The CPU chooses a speed of " + (int)Math.floor( cpuData.getSpeed() ) + " meters per second.");
 	
-		cpuMissileDist = missileTravelDistance(cpu_choices[0], cpu_choices[1]); //calculates the distance the missile travels
+		cpuMissileDist = missileTravelDistance(cpuData.getDegrees(), cpuData.getSpeed()); //calculates the distance the missile travels
 		cpuMissileDist = Math.floor(cpuMissileDist); //rounds result for easier viewability
 		
 		System.out.println("The CPU's shot hit " + (cpuMissileDist - baseDistanceGap) + " meters from your base.");
 		
 		
 		/* 
-    below is the "STATE OF THE ART" AI algorithm. For the first round, values of the mins and the max modifiers are given. After that, this code changes those values based on whether or not the cpu undershoots or overshoots the player base. It continues to change based on over or undershooting during subsequent rounds of play. 
+    below is the, ahem, "STATE OF THE ART" AI algorithm. For the first round, values of the mins and the max modifiers are given. After that, this code changes those values based on whether or not the cpu undershoots or overshoots the player base. It continues to change based on over or undershooting during subsequent rounds of play. 
     */
 			
 		if ( cpuMissileDist - baseDistanceGap > 0 )	{ //cpu overshoots the player base
-			aim_change[1] = cpu_choices[0] - aim_change[0]; //augments max angle modifier so that max angle on next turn = last angle choice
-			aim_change[3] = cpu_choices[1] - aim_change[2]; //augments max speed modifier so that max speed on next turn = last speed choice
+			cpuData.setMaxDegreeOffset(cpuData.getDegrees() - cpuData.getMinDegreeBound()); //augments maxDegreeOffset so that max degrees on next turn = previous angle choice
+			cpuData.setMaxSpeedOffset(cpuData.getSpeed() - cpuData.getMinSpeedBound()); //augments maxDegreeOffset so that max speed on next turn = previous speed choice
 		}
 		
-		if ( cpuMissileDist - baseDistanceGap < 0 ) {	//if executes when the cpu undershoots the player base
-			aim_change[0] = cpu_choices[0]; //new degree min for next round = last degree choice 
-			aim_change[2] = cpu_choices[1]; //new speed min for next round = last speed choice
-			
-			aim_change[1] = aim_change[1] - cpu_choices[0] + aim_change[0]; //this augments the max angle modifier to account for the min change
-			aim_change[3] = aim_change[3] - cpu_choices[1] + aim_change[2]; //this augments the max speed modifier to account for the min change
+		if ( cpuMissileDist - baseDistanceGap < 0 ) {	//cpu undershoots the player base
+			cpuData.setMinDegreeBound(cpuData.getDegrees()); // minDegreeBound for next round = this round's degree choice 
+			cpuData.setMinSpeedBound(cpuData.getSpeed()); // minSpeedBound for next round = this round's speed choice
+
+      //TODO this logic doesn't seem to do anything, fix
+			cpuData.setMaxDegreeOffset(cpuData.getMaxDegreeOffset() - cpuData.getDegrees() + cpuData.getMinDegreeBound()); //this augments maxDegreeOffset to account for the min change
+			cpuData.setMaxSpeedOffset(cpuData.getMaxSpeedOffset() - cpuData.getSpeed() + cpuData.getMinSpeedBound()); //this augments the max speed modifier to account for the min change
 		}
 		
     if ( Math.abs(cpuMissileDist - baseDistanceGap) <= 5 )	//win condition -- missile within 5m of player base
