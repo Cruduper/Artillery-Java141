@@ -30,7 +30,7 @@ public class Artillery {
     boolean isCpuFirst;
     boolean exit = false;
     String firstPlayerStr = "";
-		double baseDistanceGap;	//distance between the two bases.
+		double baseDistanceGap;
 		double[] cpu_choices = new double[2];
     double[] aim_change = new double[4];
     String confirm;
@@ -58,7 +58,7 @@ public class Artillery {
 
 		System.out.println("The distance between you and your opponents base is: " + baseDistanceGap + " meters away. " + firstPlayerStr + " will fire first.\n");
 		
-		gameStats.setRoundNum(0); //sets the current round to #1, so that the player_order function will work
+		gameStats.setRoundNum(1); //sets the current round to #1, so that the player_order function will work
 			
 		singleGame(isCpuFirst, randObj, baseDistanceGap, scan, gameStats, cpu_choices, aim_change);	
 
@@ -127,16 +127,17 @@ public class Artillery {
     boolean returnBool;
 		
 		if ( isFirstRound ) { //min+max boundaries given to cpu only on 1st round of play
+          //example: minBound = 25, max offset = 20, so maxBound would be 45
 			aim_change[0] = 25;  //changes minimum allowable choice for degrees
-			aim_change[1] = 20;  //changes maximum allowable choice for degrees. max = (min + aim_change[1])
+			aim_change[1] = 20;  //changes maximum allowable offset above the min allowable degrees choice. 
 			aim_change[2] = 55;  //changes minimum allowable choice for speed
-			aim_change[3] = 35;  //changes maximum allowable choice for speed. max = (min + aim_change[3])
+			aim_change[3] = 35;  //changes maximum allowable offset above the min speed choice. 
 		
 			cpu_choices[0] = 0;	//final cpu degrees choice
 			cpu_choices[1] = 0;	//final cpu speed (in m/s) choice
 		}
-			
-		cpu_choices[0] = aim_change[0] + randObj.nextDouble() * aim_change[1]; //degrees = min + ( random double between 0-1 ) * max modifier
+    double dubb = randObj.nextDouble(); 
+		cpu_choices[0] = aim_change[0] + dubb * aim_change[1]; //degrees = min + ( random double between 0-1 ) * max modifier
 		System.out.print("The CPU chooses " + (int)Math.floor( cpu_choices[0] ) + " degrees.\n");
 		cpu_choices[1] = aim_change[2] + randObj.nextDouble() * aim_change[3]; //speed = min + ( random double between 0-1 ) * max modifier
 		System.out.println("The CPU chooses a speed of " + (int)Math.floor( cpu_choices[1] ) + " meters per second.");
