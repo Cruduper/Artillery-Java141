@@ -15,8 +15,11 @@ public class Artillery {
 		boolean i = true;
     GameStats gameStats = new GameStats(0,0,1);
 
-		gameRules(scan);	//shows game rules only on program start
+    System.out.print("*******************************************************************************\n\n");
+    System.out.println("Welcome to Artill3ry, by CrudTech gaming division.\n");
+
     textColorizer(scan); //asks to turn colored text off/on 
+		gameRules(scan);	//shows game rules only on program start
 		
 		while ( i == true )
 			i = gameCode(gameStats, scan);	
@@ -47,7 +50,7 @@ public class Artillery {
       firstPlayerStr = "YOU";
     }
 
-		System.out.println("The distance between you and your opponents base is: " + baseDistanceGap + " meters away. " + firstPlayerStr + " will fire first.\n");
+		System.out.println("The distance between you and your opponent's base is: " + baseDistanceGap + " meters away. " + firstPlayerStr + " will fire first.\n");
 		
 		gameStats.setRoundNum(1); //sets the current round to #1, so that the player_order function will work
 			
@@ -221,9 +224,6 @@ public class Artillery {
 	
 	public static void gameRules(Scanner scan) {
 		String confirm;
-		
-		System.out.print("*******************************************************************************\n\n");
-		System.out.println("Welcome to Artill3ry, by CrudTech gaming division.\n");
 		System.out.print("Would you like to see the rules of the game? (y/n): ");	
 		confirm = scan.next();	
 		System.out.print("\n");
@@ -248,19 +248,13 @@ public class Artillery {
 	}//end game_rules
 
   public static void textColorizer(Scanner scan){
-    // Clear the input buffer
-    if (scan.hasNextLine()) {
-      scan.nextLine();
-    }
-
-    // Prompt the user to enable or disable colors
     System.out.print("Would you like to enable colored text(causes text errors on some systems)? (y/n): ");
     String colorChoice = scan.nextLine();
     if (colorChoice.equalsIgnoreCase("n") || colorChoice.equalsIgnoreCase("no")) {
       AnsiColors.setEnableColors(false);
       System.out.println("\nCOLORS DISABLED");
     } else {
-      System.out.println(AnsiColors.red() + "\nC" + AnsiColors.yellow() + "O" + AnsiColors.green() + "L" + AnsiColors.blue() + "O" + AnsiColors.red() + "R" + AnsiColors.yellow() + "S" + AnsiColors.reset() + " ENABLED");
+      System.out.println(AnsiColors.red() + "\nC" + AnsiColors.yellow() + "O" + AnsiColors.green() + "L" + AnsiColors.blue() + "O" + AnsiColors.red() + "R" + AnsiColors.yellow() + "S" + AnsiColors.reset() + " ENABLED\n");
     }
   }
 	
