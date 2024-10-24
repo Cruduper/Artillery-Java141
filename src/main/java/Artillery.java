@@ -121,30 +121,6 @@ public class Artillery {
 		
 		System.out.println("The CPU's shot hit " + (cpuMissileDist - baseDistanceGap) + " meters from your base.");
 		
-		
-		/* 
-    below is the, ahem, "STATE OF THE ART" AI algorithm. For the first round, values of the mins and the max modifiers are given. After that, this code changes those values based on whether or not the cpu undershoots or overshoots the player base. It continues to change based on over or undershooting during subsequent rounds of play. 
-    */
-			
-		if ( cpuMissileDist - baseDistanceGap > 0 )	{ //cpu overshoots the player base
-			cpuData.setMaxDegreeOffset(cpuData.getDegrees() - cpuData.getMinDegreeBound()); //augments maxDegreeOffset so that max degrees on next turn = previous angle choice
-			cpuData.setMaxSpeedOffset(cpuData.getSpeed() - cpuData.getMinSpeedBound()); //augments maxDegreeOffset so that max speed on next turn = previous speed choice
-		}
-		
-		if ( cpuMissileDist - baseDistanceGap < 0 ) {	//cpu undershoots the player base
-      double oldMinDegreeBound = cpuData.getMinDegreeBound();
-      double oldMinSpeedBound = cpuData.getMinSpeedBound();
-      double degreeDelta = 0;
-      double speedDelta = 0;
-			cpuData.setMinDegreeBound(cpuData.getDegrees()); // minDegreeBound for next round = this round's degree choice 
-			cpuData.setMinSpeedBound(cpuData.getSpeed()); // minSpeedBound for next round = this round's speed choice
-      degreeDelta = cpuData.getMinDegreeBound() - oldMinDegreeBound;
-      speedDelta = cpuData.getMinSpeedBound() - oldMinSpeedBound;
-
-			cpuData.setMaxDegreeOffset(cpuData.getMaxDegreeOffset() - degreeDelta); //keeps max bound the same after the min bound is offset
-			cpuData.setMaxSpeedOffset(cpuData.getMaxSpeedOffset() - speedDelta); //keeps max bound the same after the min bound is offset
-		}
-		
     if ( Math.abs(cpuMissileDist - baseDistanceGap) <= 5 )	//win condition -- missile within 5m of player base
     {					
       System.out.println(AnsiColors.red() + "               The cpu hit your base! YOU LOSE!!!!!!!!!!!" + AnsiColors.reset());
@@ -156,8 +132,39 @@ public class Artillery {
       returnBool = false;
     }		
 
+    recalculateCpuBounds(cpuData, baseDistanceGap, cpuMissileDist);
+
     return returnBool;
 	}// end cpu_turn
+
+  public static void recalculateCpuBounds(CpuGameData cpuData, double baseDistanceGap, double cpuMissileDist) {
+    /*
+     * below is the, ahem, "STATE OF THE ART" AI algorithm. For the first round,
+     * values of the mins and the max modifiers are given. After that, this code
+     * changes those values based on whether or not the cpu undershoots or
+     * overshoots the player base. It continues to change based on over or
+     * undershooting during subsequent rounds of play.
+     */
+
+    if (cpuMissileDist - baseDistanceGap > 0) { // cpu overshoots the player base
+      cpuData.setMaxDegreeOffset(cpuData.getDegrees() - cpuData.getMinDegreeBound()); // max degrees on next turn = previous angle choice
+      cpuData.setMaxSpeedOffset(cpuData.getSpeed() - cpuData.getMinSpeedBound()); // max speed on next turn = previous speed choice
+    }
+
+    if (cpuMissileDist - baseDistanceGap < 0) { // cpu undershoots the player base
+      double oldMinDegreeBound = cpuData.getMinDegreeBound();
+      double oldMinSpeedBound = cpuData.getMinSpeedBound();
+      double degreeDelta = 0;
+      double speedDelta = 0;
+      cpuData.setMinDegreeBound(cpuData.getDegrees()); // minDegreeBound for next round = this round's degree choice
+      cpuData.setMinSpeedBound(cpuData.getSpeed()); // minSpeedBound for next round = this round's speed choice
+      degreeDelta = cpuData.getMinDegreeBound() - oldMinDegreeBound;
+      speedDelta = cpuData.getMinSpeedBound() - oldMinSpeedBound;
+
+      cpuData.setMaxDegreeOffset(cpuData.getMaxDegreeOffset() - degreeDelta); // keeps max bound the same after the min bound is offset
+      cpuData.setMaxSpeedOffset(cpuData.getMaxSpeedOffset() - speedDelta); // keeps max bound the same after the min bound is offset
+    }
+  }
 	
 	public static boolean playerTurn(Scanner scan, double baseDistanceGap) {
 		double plyrDegChoice, plyrSpeedChoice, playerMissileDist;
