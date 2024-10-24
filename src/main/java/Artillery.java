@@ -38,17 +38,13 @@ public class Artillery {
     String confirm;
 		
 		gameStats.incrementGamesPlayed();	
+
 		System.out.println("\n");
 		System.out.println(AnsiColors.blue() + "****************************          GAME #" + gameStats.getGamesPlayed() + "          ****************************\n" + AnsiColors.reset());
 		
-		
 		baseDistanceGap = randomDistance(randObj);	// calculates a random distance between 350 and 700
     isCpuFirst = determinePlayerOrder(randObj);
-    if (isCpuFirst) {
-      firstPlayerStr = "The CPU";
-    } else {
-      firstPlayerStr = "YOU";
-    }
+    firstPlayerStr = isCpuFirst ? "The CPU" : "YOU";
 
 		System.out.println("The distance between you and your opponent's base is: " + baseDistanceGap + " meters away. " + firstPlayerStr + " will fire first.\n");
 		
