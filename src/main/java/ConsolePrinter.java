@@ -24,9 +24,9 @@ public class ConsolePrinter {
         + firstPlayerStr + " will fire first.\n");
   }
 
-  public static void printCpuChoice(int degrees, int speed) {
-    System.out.print("The CPU chooses " + degrees + " degrees.\n");
-    System.out.println("The CPU chooses a speed of " + speed + " meters per second.");
+  public static void printCpuChoices(double degrees, double speed) {
+    System.out.printf("The CPU chooses %.1f degrees.%n", degrees);
+    System.out.printf("The CPU chooses a speed of %.1f meters per second.%n", speed);
   }
 
   public static void printCpuTurnResult(double cpuMissileDist, double baseDistanceGap) {
